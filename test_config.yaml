@@ -1,0 +1,20 @@
+stylesheet_dir: stylesheets
+sprite_dir: sprites
+sprite_path: /ui/images/sprites
+sprites:
+  - name: Test1
+    images:
+      - file: images/comments-rss.gif
+        top_padding: 50
+        selector: .IconCommentsRss
+        align: center
+      - file: images/error_bubble.png
+        selector: .IconContentType
+        bottom_padding: 50
+      - file: images/email.jpg
+        selector: .IconEmail
+      - file: images/download.png
+        align: right
+        selector: .IconDownload
+      - file: images/facebook-app.jpg
+        selector: "#icons .IconFacebook"
