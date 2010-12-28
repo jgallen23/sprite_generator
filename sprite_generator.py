@@ -1,7 +1,10 @@
 #!/usr/bin/env python
+import os
 import sys
 import yaml
 import Image
+
+ROOT = os.getcwd()
 
 def read_config(config_file):
     config = yaml.load(file(config_file))
@@ -10,7 +13,7 @@ def read_config(config_file):
         max_width = 0
         height = 0
         for image in sprite_config['images']:
-            image['image'] = Image.open(image['file'])
+            image['image'] = Image.open(os.path.join(sprite_config['base_dir'], image['file']))
             image['size'] = image['image'].size
             if image.has_key('top_padding'):
                 height += image['top_padding']
@@ -31,6 +34,10 @@ def read_config(config_file):
         sprite_config['stylesheet_dir'] = config['stylesheet_dir']
         sprite_config['sprite_dir'] = config['sprite_dir']
         sprite_config['sprite_path'] = config['sprite_path']
+        sprite_config['base_dir'] = config['base_dir']
+        sprite_config['scale'] = config['scale']
+        sprite_config['offset_y'] = config['offset_y']
+        sprite_config['offset_x'] = config['offset_x']
         parse_sprite_config(sprite_config)
 
     return config
@@ -51,7 +58,7 @@ def create_sprite(sprite_config):
         else:
             x = 0
         img.paste(image['image'], (x, image['y_position']))
-    path = "%s/%s.png" % (sprite_config['sprite_dir'], sprite_config['name'])
+    path = "%s/%s/%s.png" % (sprite_config['base_dir'], sprite_config['sprite_dir'], sprite_config['name'])
     img.save(path, quality = 100)
 
 def create_stylesheets(config):
@@ -66,7 +73,15 @@ def create_stylesheet(sprite_config):
             x = image['align']
         else:
             x = 0
-        f.write(css % (image['selector'], sprite_config['sprite_path'], sprite_config['name'], x, image['y_position']))
+        y = -float(image['y_position'])
+        if sprite_config.has_key('scale'):
+            y = y * sprite_config['scale']
+        if sprite_config.has_key('offset_y'):
+            y += sprite_config['offset_y']
+        if x == 0 and sprite_config.has_key('offset_x'):
+            x += sprite_config['offset_x']
+            x = str(x) + "px"
+        f.write(css % (image['selector'], sprite_config['sprite_path'], sprite_config['name'], x, y))
     f.close()
 
 def main(args):
