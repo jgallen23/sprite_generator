@@ -34,10 +34,6 @@ def read_config(config_file):
         sprite_config['stylesheet_dir'] = config['stylesheet_dir']
         sprite_config['sprite_dir'] = config['sprite_dir']
         sprite_config['sprite_path'] = config['sprite_path']
-        sprite_config['base_dir'] = config['base_dir']
-        sprite_config['scale'] = config['scale']
-        sprite_config['offset_y'] = config['offset_y']
-        sprite_config['offset_x'] = config['offset_x']
         parse_sprite_config(sprite_config)
 
     return config
@@ -58,7 +54,7 @@ def create_sprite(sprite_config):
         else:
             x = 0
         img.paste(image['image'], (x, image['y_position']))
-    path = "%s/%s/%s.png" % (sprite_config['base_dir'], sprite_config['sprite_dir'], sprite_config['name'])
+    path = "%s/%s.png" % (sprite_config['sprite_dir'], sprite_config['name'])
     img.save(path, quality = 100)
 
 def create_stylesheets(config):
